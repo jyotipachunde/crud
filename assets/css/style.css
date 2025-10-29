@@ -1,19 +1,6 @@
-i{
-    font-size: 25px;
-    color: red;
+body{
+    background-color:#ededed;
 }
-.container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-ul{
-    list-style: none;
-}
-#todolist li{
-font-size: 36px;
-}
-#todolist li i{
-cursor: pointer;
+.stdcontainer{
+    cursor: pointer;
 }

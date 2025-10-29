@@ -1,12 +1,21 @@
-const todoform=document.getElementById("todoform");
-const todolist=document.getElementById("todolist");
-const todoitem=document.getElementById("todoitem");
-const updatetodobtn=document.getElementById("updatetodobtn");
-const addtodobtn=document.getElementById('addtodobtn');
+const studentform=document.getElementById("studentform");
+const fname=document.getElementById("fname");
+const lname=document.getElementById("lname");
+const email=document.getElementById("email");
+const contact=document.getElementById('contact');
+const stdcontainer=document.getElementById('stdcontainer');
+const addstdbtn=document.getElementById('addstdbtn');
+const updatestdbtn=document.getElementById('updatestdbtn');
 
-    console.log(todoform);
-    
-let todoarr=[];//[{todoitem:'js',todoid:'cdbb502c-b050-431d-be48-057cd6c68bb1';
+
+let starr=[
+    {fname:'john',
+        lname:'doe',
+        email:'j@gmail.com',
+        contact:'1234567890',
+        stdid:'e8c3eb94-85dd-4388-af3e-76bd39180b89'
+        }
+];   
 
 const uuid = () => {
   return String('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx').replace(
@@ -19,93 +28,108 @@ const uuid = () => {
   )
 }
 console.log(uuid());
-/*const onEdit=e=>{
-   
-    let edit-id=e.closest('li').id;
-}*/
-const create=(arr)=>{
+
+const createstdtr=(arr)=>{
 let r=' ';
-    arr.forEach(todo=>{
-        r+=` <li class="list-group-item d-flex justify-content-between" id="${todo.todoid}">
-                    <strong> ${todo.todoitem1}</strong>
-                    <div>  <i class="fas fa-trash-alt text-success" onclick="oremove(this)"></i>
-                  <i class="fas fa-edit text-danger" onclick="edit(this)"></i></div>
-                </li>`;
+    arr.forEach((std,i)=>{
+        r+=`<tr id=${std.stdid}>
+                  <td>${i+1}</td>
+                  <td>${std.fname} ${std.lname}</td>
+                <td>${std.email}</td>
+                  <td>${std.contact}</td>
+                  <td><i onclick="onstdedit(this)" class="fas fa-edit text-success"></i></td>
+                  <td>
+                  <i onclick="onstdremove(this)" class="fas fa-trash-alt text-danger"></i></td>
+    </tr> `;
     });
-    todolist.innerHTML=r;
+    stdcontainer.innerHTML=r;
 }
-create(todoarr);
+createstdtr(starr);
 
 let editid;
-const edit=(e)=>{
-    editid=e.closest('li').id;
-    let eobj=todoarr.find(todo=>{
-        return todo.todoid===editid;
+const onstdedit=(ele)=>{
+    editid=ele.closest('tr').id;
+    let eobj=starr.find(std=>{
+        return std.stdid===editid;
     })
     console.log(editid);
-    todoitem.value=eobj.todoitem1;
-    updatetodobtn.classList.remove('d-none');
-    addtodobtn.classList.add('d-none');
-}
-const oremove=e=>{
-     let getcon=confirm(`are o sre`);
-     console.log(getcon);
-    if(getcon===true){
-      let remove=e.closest('li').id;  
+    fname.value=eobj.fname;
+    lname.value=eobj.lname;
+    email.value=eobj.email;
+    contact.value=eobj.contact;
 
-    let geti=todoarr.findIndex(todo=>
+    addstdbtn.classList.add('d-none');
+    updatestdbtn.classList.remove('d-none');
+}
+const onstdremove=ele=>{
+     let getcon=confirm(`are you sure`);
+     console.log(getcon);
+    if(getcon){ 
+     let removeid=ele.closest('tr').id;
+    let geti=starr.findIndex(std=>
     {
-        return todo.todoid===remove;
+        return std.stdid===removeid;
     });
     console.log(geti);
 
-    todoarr.splice(geti,1);
-    e.closest('li').remove();;
+    starr.splice(geti,1);
+    ele.closest('tr').remove();
+
+    let alltrs=[...document.querySelectorAll('#stdcontainer tr')];
+    alltrs.forEach((tr,i) => {
+        tr.firstElementChild.innerHTML=i+1 
+    });
 }
 }
 
-const ontodosbmit=(eve)=>{
+const onaddstudent=(eve)=>{
         //console.log('ssbbbb');
 
     eve.preventDefault();
-    let todoobj={
-        todoitem1:todoitem.value,
-        todoid:uuid()
+    let stdobj={
+        fname:fname.value,
+        lname:lname.value,
+        email:email.value,
+        contact:contact.value,
+        stdid:uuid(),
     };
-    todoform.reset();
-        //console.log(todoobj);
+    studentform.reset();
 
-    todoarr.push(todoobj);
-    create(todoarr)
-    console.log(todoarr);
-
+    starr.unshift(stdobj);
+    createstdtr(starr);
+    console.log(starr);
 }
 
-const onupdatetodobtn=()=>{
+const onupdatestdbtn=()=>{
     console.log('sssss')
-    let upid=editid;
+    let updateid=editid;
     let upobj={
-        todoitem1:todoitem.value,
-        todoid:upid
-    }
-    console.log(upobj);
-    todoform.reset();
-    let getii=todoarr.findIndex(todo=>{
-        return todo.todoid=upid
-    })
-        console.log(getii);
+        fname:fname.value,
+        lname:lname.value,
+        email:email.value,
+        contact:contact.value,
+        stdid:editid
+    };
+    studentform.reset();
+    let getindex=starr.findIndex(std=>std.stdid===updateid);
+    console.log(getindex);
 
-    todoarr[getii]=upobj;
+    starr[getindex]=upobj;
 
-    let li=document.getElementById(editid);
-    console.log(li);
-    li.firstElementChild.textContent=upobj.todoitem1;
-    updatetodobtn.classList.add('d-none');
-    addtodobtn.classList.remove('d-none');
+    let tr=document.getElementById(editid);
+    console.log(tr);
+    let trchild=[...tr.children];
+    trchild[1].innerText=`${upobj.fname} ${upobj.lname}`
+    trchild[2].innerText=`${upobj.email}`
+    trchild[3].innerText=`${upobj.contact}`
+    console.log(trchild);
+    updatestdbtn.classList.add('d-none');
+    addstdbtn.classList.remove('d-none');
 
 }
 
 
-todoform.addEventListener("submit" ,ontodosbmit);
-updatetodobtn.addEventListener("click" ,onupdatetodobtn);
+studentform.addEventListener("submit" ,onaddstudent);
+updatestdbtn.addEventListener("click" ,onupdatestdbtn);
+
 
