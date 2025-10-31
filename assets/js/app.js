@@ -7,15 +7,23 @@ const stdcontainer=document.getElementById('stdcontainer');
 const addstdbtn=document.getElementById('addstdbtn');
 const updatestdbtn=document.getElementById('updatestdbtn');
 
+let starr;
+let a=localStorage.getItem('starr');
+if(a){
+    starr=JSON.parse(localStorage.getItem('starr'));
+}else{
+    starr=[];
+} 
 
-let starr=[
+starr=[
     {fname:'john',
         lname:'doe',
         email:'j@gmail.com',
         contact:'1234567890',
         stdid:'e8c3eb94-85dd-4388-af3e-76bd39180b89'
         }
-];   
+];  
+
 
 const uuid = () => {
   return String('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx').replace(
@@ -73,12 +81,37 @@ const onstdremove=ele=>{
     console.log(geti);
 
     starr.splice(geti,1);
+    localStorage.setItem('starr',JSON.stringify(starr));
     ele.closest('tr').remove();
+
+let timerInterval;
+Swal.fire({
+        title:'removed!',
+        text:'Student details removed successfully',
+        icon:'success',
+        timer:3000,
+  didOpen: () => {
+    Swal.showLoading();
+    const timer = Swal.getPopup().querySelector("b");
+    timerInterval = setInterval(() => {
+      //timer.textContent = `${Swal.getTimerLeft()}`;
+    }, 100);
+  },
+  willClose: () => {
+    clearInterval(timerInterval);
+  }
+}).then((result) => {
+  /* Read more about handling dismissals below */
+  if (result.isconfirmed) {
+    console.log(result);
+  }
+});
 
     let alltrs=[...document.querySelectorAll('#stdcontainer tr')];
     alltrs.forEach((tr,i) => {
         tr.firstElementChild.innerHTML=i+1 
     });
+    
 }
 }
 
@@ -96,7 +129,14 @@ const onaddstudent=(eve)=>{
     studentform.reset();
 
     starr.unshift(stdobj);
+    localStorage.setItem('starr',JSON.stringify(starr));
     createstdtr(starr);
+    swal.fire({
+        title:'added',
+        text:'Student details added successfully',
+        icon:'success',
+        timer:3000
+    })
     console.log(starr);
 }
 
@@ -115,6 +155,7 @@ const onupdatestdbtn=()=>{
     console.log(getindex);
 
     starr[getindex]=upobj;
+    localStorage.setItem('starr',JSON.stringify(starr));
 
     let tr=document.getElementById(editid);
     console.log(tr);
@@ -125,6 +166,12 @@ const onupdatestdbtn=()=>{
     console.log(trchild);
     updatestdbtn.classList.add('d-none');
     addstdbtn.classList.remove('d-none');
+    swal.fire({
+        title:'Updated!',
+        text:'Student details updated successfully',
+        icon:'success',
+        timer:3000
+    })
 
 }
 
