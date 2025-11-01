@@ -7,22 +7,24 @@ const stdcontainer=document.getElementById('stdcontainer');
 const addstdbtn=document.getElementById('addstdbtn');
 const updatestdbtn=document.getElementById('updatestdbtn');
 
-let starr;
-let a=localStorage.getItem('starr');
-if(a){
-    starr=JSON.parse(localStorage.getItem('starr'));
-}else{
-    starr=[];
-} 
+let cl=console.log;
 
-starr=[
+let starr;
+if(localStorage.getItem("starr")){
+   starr = JSON.parse(localStorage.getItem("starr")); 
+}else{
+  starr = [];
+}
+cl(starr);
+
+/*starr=[
     {fname:'john',
         lname:'doe',
         email:'j@gmail.com',
         contact:'1234567890',
         stdid:'e8c3eb94-85dd-4388-af3e-76bd39180b89'
         }
-];  
+*/ 
 
 
 const uuid = () => {
@@ -81,7 +83,7 @@ const onstdremove=ele=>{
     console.log(geti);
 
     starr.splice(geti,1);
-    localStorage.setItem('starr',JSON.stringify(starr));
+     localStorage.setItem("starr", JSON.stringify(starr));
     ele.closest('tr').remove();
 
 let timerInterval;
@@ -89,7 +91,7 @@ Swal.fire({
         title:'removed!',
         text:'Student details removed successfully',
         icon:'success',
-        timer:3000,
+        timer:2000,
   didOpen: () => {
     Swal.showLoading();
     const timer = Swal.getPopup().querySelector("b");
@@ -128,8 +130,8 @@ const onaddstudent=(eve)=>{
     };
     studentform.reset();
 
-    starr.unshift(stdobj);
-    localStorage.setItem('starr',JSON.stringify(starr));
+    starr.push(stdobj);
+     localStorage.setItem("starr", JSON.stringify(starr));
     createstdtr(starr);
     swal.fire({
         title:'added',
@@ -155,7 +157,8 @@ const onupdatestdbtn=()=>{
     console.log(getindex);
 
     starr[getindex]=upobj;
-    localStorage.setItem('starr',JSON.stringify(starr));
+        localStorage.setItem("starr", JSON.stringify(starr));
+
 
     let tr=document.getElementById(editid);
     console.log(tr);
