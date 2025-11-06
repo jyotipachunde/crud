@@ -24,8 +24,8 @@ cl(starr);
         contact:'1234567890',
         stdid:'e8c3eb94-85dd-4388-af3e-76bd39180b89'
         }
-*/ 
-
+]; 
+*/
 
 const uuid = () => {
   return String('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx').replace(
@@ -132,7 +132,17 @@ const onaddstudent=(eve)=>{
 
     starr.push(stdobj);
      localStorage.setItem("starr", JSON.stringify(starr));
-    createstdtr(starr);
+    //createstdtr(starr);
+    let tr=document.createElement('tr');
+    tr.id=stdobj.stdid;
+    tr.innerHTML=`
+                  <td>${stdobj.fname} ${stdobj.lname}</td>
+                <td>${stdobj.email}</td>
+                  <td>${stdobj.contact}</td>
+                  <td><i onclick="onstdedit(this)" class="fas fa-edit text-success"></i></td>
+                  <td>
+                  <i onclick="onstdremove(this)" class="fas fa-trash-alt text-danger"></i></td>`
+    stdcontainer.append(tr);
     swal.fire({
         title:'added',
         text:'Student details added successfully',
